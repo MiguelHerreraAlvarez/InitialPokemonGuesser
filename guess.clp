@@ -1,9 +1,6 @@
 ;;;     To execute, merely load, reset and run.
 ;;;======================================================
 
-;;****************
-;;* DEFFUNCTIONS *
-;;****************
 (deftemplate pokemon
     (slot nombre)
     (slot tipo)
@@ -29,10 +26,8 @@
        then TRUE 
        else FALSE))
 
-;;;***************
-;;;* QUERY RULES *
-;;;***************
-(defrule eliminar-tipos
+
+(defrule eliminar-tipos-confirmado
     (tipo-definido ?deftipo)
     ?id <- (pokemon (tipo ?tipo))
     =>
@@ -41,32 +36,27 @@
     )
 )
 
-(defrule determinar-tipo-planta ""
+(defrule eliminar-tipos-descartado
+    (tipo-descartado ?deftipo)
+    ?id <- (pokemon (tipo ?tipo))
+    =>
+    (if (eq ?deftipo ?tipo)
+        then (retract ?id)
+    )
+)
+
+(defrule determinar-tipo ""
     (not (tipo-definido ?))
+    (pokemon (tipo ?tipo))
     (not (terminado ?))
     =>
-    (if (yes-or-no-p "Es de tipo planta? (Si/No)?")
+    (if (yes-or-no-p (str-cat "Es de tipo " ?tipo "?(Si/No)?"))
     then 
-    (assert (tipo-definido planta))) 
+    (assert (tipo-definido ?tipo))
+    else (assert (tipo-descartado ?tipo))) 
 )
 
-(defrule determinar-tipo-fuego ""
-    (not (tipo-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es de tipo fuego? (Si/No)?")
-    then (assert (tipo-definido fuego)))
-)
-
-(defrule determinar-tipo-agua ""
-    (not (tipo-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es de tipo agua? (Si/No)?")
-    then (assert (tipo-definido agua)))
-)
-
-(defrule eliminar-clases
+(defrule eliminar-clase-definida
     (clase-definido ?defclase)
     ?id <- (pokemon (clase ?clase))
     =>
@@ -75,48 +65,27 @@
     )
 )
 
-(defrule determinar-clase-anfibio ""
-    (not (clase-definido ?))
-    (not (terminado ?))
+(defrule eliminar-clase-descartada
+    (clase-descartado ?defclase)
+    ?id <- (pokemon (clase ?clase))
     =>
-    (if (yes-or-no-p "Es un anfibio? (Si/No)?")
-    then (assert (clase-definido anfibio)))
+    (if (eq ?defclase ?clase)
+        then (retract ?id)
+    )
 )
 
-(defrule determinar-clase-ave ""
+(defrule determinar-clase ""
     (not (clase-definido ?))
     (not (terminado ?))
+    (pokemon (clase ?clase))
     =>
-    (if (yes-or-no-p "Es un ave? (Si/No)?")
-    then (assert (clase-definido ave)))
-)
-
-(defrule determinar-clase-mamifero ""
-    (not (clase-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un mamifero? (Si/No)?")
-    then (assert (clase-definido mamifero)))
-)
-
-(defrule determinar-clase-pez ""
-    (not (clase-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un pez? (Si/No)?")
-    then (assert (clase-definido pez)))
-)
-
-(defrule determinar-clase-reptil ""
-    (not (clase-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un reptil? (Si/No)?")
-    then (assert (clase-definido reptil)))
+    (if (yes-or-no-p (str-cat "Es un " ?clase "?(Si/No)?"))
+    then (assert (clase-definido ?clase))
+    else (assert (clase-descartado ?clase)))
 )
 
 
-(defrule eliminar-categorias
+(defrule eliminar-categoria-definida
     (categoria-definido ?defcategoria)
     ?id <- (pokemon (categoria ?categoria))
     =>
@@ -125,166 +94,24 @@
     )
 )
 
-(defrule determinar-categoria-sapo ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
+(defrule eliminar-categoria-descartada
+    (categoria-descartado ?defcategoria)
+    ?id <- (pokemon (categoria ?categoria))
     =>
-    (if (yes-or-no-p "Es un sapo? (Si/No)?")
-    then (assert (categoria-definido sapo)))
+    (if (eq ?defcategoria ?categoria)
+        then (retract ?id)
+    )
 )
 
-(defrule determinar-categoria-lagartija ""
+(defrule determinar-categoria ""
     (not (categoria-definido ?))
     (not (terminado ?))
+    (pokemon (categoria ?categoria))
     =>
-    (if (yes-or-no-p "Es una lagartija? (Si/No)?")
-    then (assert (categoria-definido lagartija)))
+    (if (yes-or-no-p (str-cat "Es un " ?categoria "?(Si/No)?"))
+    then (assert (categoria-definido ?categoria))
+    else (assert (categoria-descartado ?categoria)))
 )
-
-(defrule determinar-categoria-tortuga ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es una tortuga? (Si/No)?")
-    then (assert (categoria-definido tortuga)))
-)
-
-(defrule determinar-categoria-dinosaurio ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un dinosaurio? (Si/No)?")
-    then (assert (categoria-definido dinosaurio)))
-)
-
-(defrule determinar-categoria-erizo ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un erizo? (Si/No)?")
-    then (assert (categoria-definido erizo)))
-)
-
-(defrule determinar-categoria-cocodrilo ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un cocodrilo? (Si/No)?")
-    then (assert (categoria-definido cocodrilo)))
-)
-
-(defrule determinar-categoria-rana ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es una rana? (Si/No)?")
-    then (assert (categoria-definido rana)))
-)
-
-(defrule determinar-categoria-pollo ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un pollo? (Si/No)?")
-    then (assert (categoria-definido pollo)))
-)
-
-(defrule determinar-categoria-pez ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un pez? (Si/No)?")
-    then (assert (categoria-definido pez)))
-)
-
-(defrule determinar-categoria-mono ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un mono? (Si/No)?")
-    then (assert (categoria-definido mono)))
-)
-
-(defrule determinar-categoria-pinguino ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un pinguino? (Si/No)?")
-    then (assert (categoria-definido pinguino)))
-)
-
-(defrule determinar-categoria-serpiente ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es una serpiente? (Si/No)?")
-    then (assert (categoria-definido serpiente)))
-)
-
-(defrule determinar-categoria-cerdo ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un cerdo? (Si/No)?")
-    then (assert (categoria-definido cerdo)))
-)
-
-(defrule determinar-categoria-nutria ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es una nutria? (Si/No)?")
-    then (assert (categoria-definido nutria)))
-)
-
-(defrule determinar-categoria-zorro ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un zorro? (Si/No)?")
-    then (assert (categoria-definido zorro)))
-)
-
-(defrule determinar-categoria-buho ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un buho? (Si/No)?")
-    then (assert (categoria-definido buho)))
-)
-
-(defrule determinar-categoria-gato ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un gato? (Si/No)?")
-    then (assert (categoria-definido gato)))
-)
-
-(defrule determinar-categoria-foca ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es una foca? (Si/No)?")
-    then (assert (categoria-definido foca)))
-)
-
-(defrule determinar-categoria-conejo ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un conejo? (Si/No)?")
-    then (assert (categoria-definido conejo)))
-)
-
-(defrule determinar-categoria-camaleon ""
-    (not (categoria-definido ?))
-    (not (terminado ?))
-    =>
-    (if (yes-or-no-p "Es un camaleon? (Si/No)?")
-    then (assert (categoria-definido camaleon)))
-)
-
 
 ;;;********************************
 ;;;* STARTUP AND CONCLUSION RULES *
