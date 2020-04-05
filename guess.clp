@@ -8,6 +8,8 @@
     (slot categoria)
 )
 
+
+
 (deffunction ask-question (?question $?allowed-values)
    (printout t ?question)
    (bind ?answer (read))
@@ -26,6 +28,13 @@
        then TRUE 
        else FALSE))
 
+(defrule no-quedan-pokemon
+    (declare (salience 10))
+    (not (pokemon))
+    =>
+    (printout t "No existen pokemon con esas caracteristicas." crlf)
+    (halt)
+)
 
 (defrule eliminar-tipos-confirmado
     (tipo-definido ?deftipo)
