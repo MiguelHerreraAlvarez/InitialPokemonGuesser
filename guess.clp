@@ -1,5 +1,7 @@
-;;;     To execute, merely load, reset and run.
-;;;======================================================
+;;;Para ejecutar:
+;;;    (load guess.clp)
+;;;    (reset)
+;;;    (run)
 
 (deftemplate pokemon
     (slot nombre)
@@ -7,8 +9,6 @@
     (slot clase)
     (slot categoria)
 )
-
-
 
 (deffunction ask-question (?question $?allowed-values)
    (printout t ?question)
@@ -59,7 +59,7 @@
     (pokemon (tipo ?tipo))
     (not (terminado ?))
     =>
-    (if (yes-or-no-p (str-cat "Es de tipo " ?tipo "?(Si/No)?"))
+    (if (yes-or-no-p (str-cat "Es de tipo " ?tipo "?(Si/No)? "))
     then 
     (assert (tipo-definido ?tipo))
     else (assert (tipo-descartado ?tipo))) 
@@ -88,7 +88,7 @@
     (not (terminado ?))
     (pokemon (clase ?clase))
     =>
-    (if (yes-or-no-p (str-cat "Es un " ?clase "?(Si/No)?"))
+    (if (yes-or-no-p (str-cat "Es un " ?clase "?(Si/No)? "))
     then (assert (clase-definido ?clase))
     else (assert (clase-descartado ?clase)))
 )
@@ -117,7 +117,7 @@
     (not (terminado ?))
     (pokemon (categoria ?categoria))
     =>
-    (if (yes-or-no-p (str-cat "Es un " ?categoria "?(Si/No)?"))
+    (if (yes-or-no-p (str-cat "Es un(a) " ?categoria "?(Si/No)? "))
     then (assert (categoria-definido ?categoria))
     else (assert (categoria-descartado ?categoria)))
 )
@@ -129,10 +129,10 @@
 (defrule system-banner ""
     (declare (salience 30))
     =>
+    (load-facts pokemon.clp)
     (printout t crlf crlf)
     (printout t "Adivinador de iniciales")
     (printout t crlf crlf)
-    (load-facts pokemons.clp)
 )
 
 (defrule system-out ""
@@ -144,6 +144,6 @@
     )
     =>
     (printout t crlf crlf)
-    (printout t ?nombre)
+    (printout t "El pokemon es " ?nombre)
     (printout t crlf crlf)
 )
